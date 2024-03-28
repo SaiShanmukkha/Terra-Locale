@@ -1,16 +1,9 @@
 from django.shortcuts import render
-# from products.models import Product
 from cart.models import Product,Category
 from django.db.models import Q
 from django.views import generic
 from typing import Any, Dict, Union, List
 
-# from elasticsearch_dsl import analyzer, tokenizer
-
-# autocomplete_analyzer = analyzer('autocomplete_analyzer',
-#             tokenizer=tokenizer('trigram', 'nGram', min_gram=1, max_gram=20),
-#             filter=['lowercase']
-#         )
 
 def do_search(request):
     category= Category.objects.all()
