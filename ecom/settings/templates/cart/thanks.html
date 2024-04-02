@@ -1,0 +1,19 @@
+
+{% extends "base.html" %}
+{% load static%}
+
+{% block content %}
+
+{% block additional_styles %}
+<style>
+   body {
+    background-image: url('{% static 'images/thankyou.png' %}');
+   }
+</style>
+{% endblock %}
+
+<div  >
+    <h1>Thanks for ordering </h1>
+</div>
+
+{% endblock content %}

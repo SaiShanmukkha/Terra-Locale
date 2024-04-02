@@ -10,6 +10,7 @@ from django.views import generic
 from cart.models import Order
 from .forms import ContactForm
 
+
 class ProfileView(LoginRequiredMixin, generic.TemplateView):
     template_name: str = 'profile.html'
 
@@ -18,8 +19,10 @@ class ProfileView(LoginRequiredMixin, generic.TemplateView):
         context.update({"orders": Order.objects.filter(user=self.request.user, ordered=True)})
         return context
 
+
 class HomeView(generic.TemplateView):
     template_name: str = 'index.html'
+
 
 class ContactView(generic.FormView):
     template_name: str = 'contact.html'
