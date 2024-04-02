@@ -1,28 +1,24 @@
 from pathlib import Path
 from typing import (List, Dict, Tuple, Any)
 import os
+import environ
 from environ import Env
-
-env = Env()
+env = environ.Env()
+environ.Env.read_env()
 #BASE_DIR ="D:/mscs/survey of software enginnering/django_ecommerce-master/django_ecommerce-master/templates" #os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
-print("the base uto;",BASE_DIR)
+BASE_DIR: Path = Path(__file__).resolve().parent
+print("baesdir ",BASE_DIR)
 SECRET_KEY: str = env.str('SECRET_KEY', 'default-secret-key')
 DEBUG: bool = True
 ALLOWED_HOSTS = []
 #ALLOWED_HOSTS: List[str] = ['www.domain.com', ]
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 ROOT_URLCONF: str = 'ecom.urls'
 WSGI_APPLICATION: str = 'ecom.wsgi.application'
 SITE_ID: int = 1
 LOGIN_REDIRECT_URL: str = '/'
-
-#STATICFILES_FINDERS = (     'django.contrib.staticfiles.finders.FileSystemFinder',     'django.contrib.staticfiles.finders.AppDirectoriesFinder',     'django.contrib.staticfiles.finders.DefaultStorageFinder', )
-
-#PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
 
 # Installed applications
 # region
@@ -41,6 +37,7 @@ REQUIREMENTS_APPS: List[str] = [
     'allauth.account',
     'allauth.socialaccount',
     'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 PROJECT_APPS: List[str] = [
@@ -48,6 +45,7 @@ PROJECT_APPS: List[str] = [
     'core',
     'staff',
     'ecom',
+    'search',
 ]
 INSTALLED_APPS = [
     *DJANGO_APPS,
@@ -57,8 +55,8 @@ INSTALLED_APPS = [
 # endregion
 
 
-DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL', 'jasti.pranay@gmail.com')
-NOTIFY_EMAIL: str = env.str('NOTIFY_EMAIL', 'jasti.pranay@gmail.com')
+DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL', '')
+NOTIFY_EMAIL: str = env.str('NOTIFY_EMAIL', '')
 
 # Middleware
 # region
@@ -77,7 +75,7 @@ MIDDLEWARE: List[str] = [
 # region
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [os.path.join(BASE_DIR, 'templates')],
+    'DIRS': [BASE_DIR / 'templates'],
     #'DIRS':[os.path.join(BASE_DIR, 'templates')],
     'APP_DIRS': True,
     'OPTIONS': {
@@ -89,20 +87,25 @@ TEMPLATES = [{
         ],
     },
 }, ]
-
-#TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'templates'),)
 # endregion
 
 # Database
 # region
+# DATABASES: Dict[str, Dict[str, Any]] = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': env.str('DATABASE_NAME', 'django_ecommerce1'),
+#         'USER': env.str('DATABASE_USER', 'postgres'),
+#         'PASSWORD': env.str('DATABASE_PASSWORD', 'admin'),
+#         'HOST': env.str('DATABASE_HOST', 'localhost'),
+#         'PORT': env.str('DATABASE_PORT', '5432'),
+#     }
+# }
+
 DATABASES: Dict[str, Dict[str, Any]] = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env.str('DATABASE_NAME', 'django_ecommerce'),
-        'USER': env.str('DATABASE_USER', 'postgres'),
-        'PASSWORD': env.str('DATABASE_PASSWORD', 'admin'),
-        'HOST': env.str('DATABASE_HOST', 'localhost'),
-        'PORT': env.str('DATABASE_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 # endregion
@@ -133,12 +136,14 @@ AUTHENTICATION_BACKENDS: Tuple[str, ...] = (
 ACCOUNT_AUTHENTICATION_METHOD: str = 'email'
 ACCOUNT_EMAIL_REQUIRED: bool = True
 ACCOUNT_USERNAME_REQUIRED: bool = False
-ACCOUNT_EMAIL_VERIFICATION: str = 'none'
+ACCOUNT_EMAIL_VERIFICATION: str = 'mandatory'
 # endregion
 
 # Crispy
 # region
-CRISPY_TEMPLATE_PACK: str = 'bootstrap4'
+# CRISPY_TEMPLATE_PACK: str = 'bootstrap4'
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 # endregion
 
 # Language and Timezone
@@ -152,27 +157,26 @@ USE_TZ: bool = True
 
 # Static and Media
 # region
-STATIC_URL: str = '/static/'
-MEDIA_URL: str = '/media/'
-STATIC_ROOT: Path =os.path.join(BASE_DIR, 'static') #BASE_DIR / 'static_root'
+STATIC_URL: str =  'static/'
+MEDIA_URL: str =  'media/'
 
-# STATICFILES_DIRS: Tuple[Path, ...] = (
-#     #BASE_DIR / 'static',
-#     os.path.join(BASE_DIR, 'static'),
-# )
+STATICFILES_DIRS: Tuple[Path, ...] = (
+    BASE_DIR / 'static/',
+)
 
-
-MEDIA_ROOT: Path = os.path.join(BASE_DIR, 'media')#BASE_DIR / 'media_root'
+STATIC_ROOT: Path = BASE_DIR / 'static_root'
+MEDIA_ROOT: Path = BASE_DIR / 'media_root'
 # endregion
 
 # Payment
 # region
-# PAYPAL_CLIENT_ID: str = env.str('PAYPAL_LIVE_CLIENT_ID', '')
-# PAYPAL_SECRET_KEY: str = env.str('PAYPAL_LIVE_SECRET_KEY', '')
+PAYPAL_CLIENT_ID= 'AeFbXQxVuKX0SiWi6DdBQmUMxbeadLWufJASt-1v54RgrzgNnDkhcCd6AEb_RyxNjn-LVoSyS7Xr9Wzj'
+PAYPAL_SECRET_KEY: str = env.str('PAYPAL_SANDBOX_SECRET_KEY', 'EJuTMxmg0tgdhFWuwesyYvDVQb7APssaG3t3xynKvwVT5Dv8mhHb3DmMZgx0_PaQt7pj5GyyqQ3-upV3')
 
-# STRIPE_PUBLIC_KEY: str = env.str('STRIPE_PUBLIC_KEY', '')
-# STRIPE_SECRET_KEY: str = env.str('STRIPE_SECRET_KEY', '')
-# STRIPE_WEBHOOK_SECRET: str = env.str('STRIPE_WEBHOOK_SECRET', '')
+STRIPE_PUBLIC_KEY='pk_test_51N0xemEV22rNJwJuBy7AAKv2RSV2xIYIEsvJwbtd6gEs7yXhbdJlUTylmO9tQPvs6T8h9piCKLKV0DhXMysPy1Vk00tbsrgmOx'
+STRIPE_SECRET_KEY='sk_test_51N0xemEV22rNJwJuRySyjsJKVHbeiboMog0ueA2dM0eNX6ndJm6PWdMmAybiDQI2ivDdWNGV0IWVAtNoZjXPsxxH0051UWRePn'
+STRIPE_API_KEY='sk_test_51N0xemEV22rNJwJuRySyjsJKVHbeiboMog0ueA2dM0eNX6ndJm6PWdMmAybiDQI2ivDdWNGV0IWVAtNoZjXPsxxH0051UWRePn'
+STRIPE_WEBHOOK_SECRET: str = env.str('STRIPE_WEBHOOK_SECRET', ' whsec_32e965fea055889abf584bbb7a8b1f8021fbed5500581e52e8c03c4c537c8943')
 # endregion
 
 # Session
@@ -192,3 +196,10 @@ SESSION_COOKIE_SECURE: bool = True
 #     ('HTTP_X_FORWARDED_PROTO', 'https'),
 # )
 # endregion
+password=env.str('PASSWORD')
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER =DEFAULT_FROM_EMAIL
+EMAIL_HOST_PASSWORD =password
