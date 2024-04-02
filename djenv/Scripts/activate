@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\saish\OneDrive\Desktop\django_ecommerce-master\django_ecommerce-master\django_ecommerce-master\djenv"
+VIRTUAL_ENV="S:\DJ\Terra-Locale\djenv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
