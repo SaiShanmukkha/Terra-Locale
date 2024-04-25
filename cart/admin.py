@@ -26,12 +26,14 @@ class AddressAdmin(admin.ModelAdmin):
         'address_type',
     ]
 
+class MainCategoryAdmin(admin.ModelAdmin):
+    list_display = ["id", "name"]
 
 admin.site.register(Order)
 admin.site.register(Product)
 admin.site.register(Payment)
 admin.site.register(Category)
-admin.site.register(MainCategory)
+admin.site.register(MainCategory, MainCategoryAdmin)
 admin.site.register(OrderItem)
 admin.site.register(SizeVariation)
 admin.site.register(StripePayment)

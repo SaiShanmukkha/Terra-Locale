@@ -46,23 +46,22 @@ class ProductListView(generic.ListView):
         cs=Category.objects.all()
         
         main_category=self.request.GET.get('mainCategory',None)
-        category = self.request.GET.get('category', None)
+        # category = self.request.GET.get('category', None)
 
         print("vaues",cs.filter(Q(main_category__name=main_category)))
         if not main_category:
-            if not category:
-                return qs
-            return qs.filter(
-                Q(primary_category__name=category) |
-                Q(secondary_categories__name=category)
-            ).distinct()
+            # if not category:
+            return qs
+        return qs.filter(
+            Q(primary_category__name=main_category)
+        ).distinct()
         return qs.filter(primary_category__in = cs.filter(Q(main_category__name=main_category)))
         
         
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super(ProductListView, self).get_context_data(**kwargs)
-        context.update({"categories": Category.objects.values("name")})
+        # context.update({"categories": Category.objects.values("name")})
         context.update({"mainCategory":MainCategory.objects.all().order_by('name')})
         return context
 
@@ -82,7 +81,6 @@ class ProductSearchListView(generic.ListView):
                 return qs
             return qs.filter(
                 Q(title__icontains=search1) |
-                Q(secondary_categories__name__icontains=search1)|
                 Q(primary_category__name__icontains=search1)|Q(primary_category__in = cs.filter(Q(main_category__name__icontains=search1)))#|
                # Q( "multi_match",query=search,fields=['title', ], fuzziness='auto',))
                ).distinct()
@@ -92,7 +90,7 @@ class ProductSearchListView(generic.ListView):
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:
         context = super(ProductSearchListView, self).get_context_data(**kwargs)
-        context.update({"categories": Category.objects.values("name")})
+        # context.update({"categories": Category.objects.values("name")})
         context.update({"mainCategory":MainCategory.objects.all().order_by('-id')})
         return context
 
@@ -118,8 +116,8 @@ class ProductDetailView(generic.FormView):
 
         item_filter = order.items.filter(
             product=product,
-            colour=form.cleaned_data['colour'],
-            size=form.cleaned_data['size'],
+            # colour=form.cleaned_data['colour'],
+            # size=form.cleaned_data['size'],
         )
         if not item_filter.exists():
             new_item = form.save(commit=False)

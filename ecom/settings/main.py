@@ -38,6 +38,8 @@ REQUIREMENTS_APPS: List[str] = [
     'allauth.socialaccount',
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework',
+    'djapi'
 ]
 
 PROJECT_APPS: List[str] = [
@@ -47,6 +49,7 @@ PROJECT_APPS: List[str] = [
     'ecom',
     'search',
 ]
+
 INSTALLED_APPS = [
     *DJANGO_APPS,
     *REQUIREMENTS_APPS,
