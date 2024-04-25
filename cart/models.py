@@ -71,7 +71,7 @@ class SizeVariation(models.Model):
 
 
 class Product(models.Model):
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     slug = models.SlugField(unique=True)
     stock = models.IntegerField(default=0)
     title = models.CharField(max_length=150)
@@ -79,17 +79,17 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
     rating=models.FloatField(default=2.5)
-    image = models.ImageField(upload_to='product_images')
-    available_sizes = models.ManyToManyField(SizeVariation)
-    available_colours = models.ManyToManyField(ColourVariation)
-    secondary_categories = models.ManyToManyField(to=Category, blank=True)
+    image = models.CharField(max_length=500, null=True, blank=True)
     price = models.DecimalField(default=0, max_digits=9, decimal_places=2, )
     primary_category = models.ForeignKey(
-        to=Category,
+        to=MainCategory,
         on_delete=models.CASCADE,
         related_name='primary_products',
         blank=True, null=True,
     )
+    available_sizes = models.ManyToManyField(SizeVariation, null=True, blank=True)
+    available_colours = models.ManyToManyField(ColourVariation, null=True, blank=True)
+    # secondary_categories = models.ManyToManyField(to=Category, null=True, blank=True)
 
     def __str__(self) -> str:
         return self.title
