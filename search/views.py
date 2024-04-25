@@ -33,24 +33,22 @@ class ProductSearchListView(generic.ListView):
 
     def get_queryset(self):
         qs = Product.objects.all()
-        cs=Category.objects.all()
-        
-        main_category=self.request.GET.get('mainCategory',None)
         search = self.request.GET.get('search', None)
-        print("sarch keword",search)
+        main_category = self.request.GET.get('mainCategory', None)
 
-        
-        print("vaues",qs.filter(Q(slug__icontains=search)))
-        if not main_category:
-            if not search:
-                return qs
-            return qs.filter(
-                Q(title__icontains=search) |Q(secondary_categories__name__icontains=search)|
-                Q(primary_category__name__icontains=search)|Q(primary_category__in = cs.filter(Q(main_category__name__icontains=search)))#|
-               # Q( "multi_match",query=search,fields=['title', ], fuzziness='auto',))
-               ).distinct()
-        return qs.filter(primary_category__in = cs.filter(Q(main_category__name=main_category)))
-        
+        if main_category:
+            # Filter categories based on MainCategory and use those categories to filter products
+            categories = Category.objects.filter(main_category__name__icontains=main_category)
+            qs = qs.filter(primary_category__in=categories)
+        elif search:
+            # Filter products by title or by primary categories that match the search string
+            qs = qs.filter(
+                Q(title__icontains=search) |
+                Q(primary_category__name__icontains=search)
+            ).distinct()
+
+        return qs
+
         
 
     def get_context_data(self, **kwargs) -> Dict[str, Any]:

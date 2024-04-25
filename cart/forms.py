@@ -3,9 +3,7 @@ from django.contrib.auth import get_user_model
 
 from .models import (
     OrderItem,
-    ColourVariation,
     Product,
-    SizeVariation,
     Address
 )
 
@@ -14,20 +12,20 @@ User = get_user_model()
 
 class AddToCartForm(forms.ModelForm):
     quantity = forms.IntegerField(min_value=1)
-    size = forms.ModelChoiceField(queryset=SizeVariation.objects.none())
-    colour = forms.ModelChoiceField(queryset=ColourVariation.objects.none())
+    # size = forms.ModelChoiceField(queryset=SizeVariation.objects.none())
+    # colour = forms.ModelChoiceField(queryset=ColourVariation.objects.none())
 
     class Meta:
         model = OrderItem
-        fields = ('quantity', 'colour', 'size',)
+        fields = ('quantity', )
 
     def __init__(self, *args, **kwargs):
         self.product_id = kwargs.pop('product_id')
         product = Product.objects.get(id=self.product_id)
         super().__init__(*args, **kwargs)
 
-        self.fields['colour'].queryset = product.available_colours.all()
-        self.fields['size'].queryset = product.available_sizes.all()
+        # self.fields['colour'].queryset = product.available_colours.all()
+        # self.fields['size'].queryset = product.available_sizes.all()
 
     def clean(self):
         product = Product.objects.get(id=self.product_id)

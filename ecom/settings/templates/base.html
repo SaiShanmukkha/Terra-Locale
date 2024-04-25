@@ -57,9 +57,7 @@
   }</style>
   {% block additional_styles %}
 <style>
-   body {
-    background-image: url('{% static 'images/background.png' %}');
-   }
+   
 </style>
 {% endblock %}
 <body >
@@ -143,8 +141,35 @@
 </div>
 
 {% include 'scripts.html' %}
+<!-- Chatbot Icon -->
+<div style="position: fixed; bottom: 20px; right: 20px; cursor: pointer;" onclick="toggleChatbot()">
+    <img src="{% static 'images/chatbot3.png' %}" alt="Chatbot" width="100px">
+</div>
 
+<!-- Chatbot Iframe and Close Button -->
+<div id="chatbotContainer" style="position: fixed; bottom: 0; right: 0; transform: translateX(100%); opacity: 0; z-index: 999999999">
+    <iframe
+        src="https://nextjs-chat-lake-rho.vercel.app/"
+        title="Chatbot"
+        class="chatbot-iframe"
+        style="width: 550px; height: 500px; border: none;"
+        id="chatbotIframe"
+        sandbox="allow-scripts allow-same-origin allow-popups"
+    ></iframe>
+    <button style="position: absolute; top: 0; right: 0; cursor: pointer;" onclick="toggleChatbot()">Close</button>
+</div>
+
+<script>
+var showChatbot = false;
+function toggleChatbot() {
+    showChatbot = !showChatbot;
+    var container = document.getElementById('chatbotContainer');
+    container.style.transform = showChatbot ? 'translateX(0)' : 'translateX(100%)';
+    container.style.opacity = showChatbot ? '1' : '0';
+}
+</script>
 {% block scripts %}
+
 {% endblock scripts %}
 
 </body>

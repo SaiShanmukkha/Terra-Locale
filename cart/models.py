@@ -119,8 +119,8 @@ class Product(models.Model):
 class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     product = models.ForeignKey(to=Product, on_delete=models.CASCADE)
-    size = models.ForeignKey(to=SizeVariation, on_delete=models.CASCADE)
-    colour = models.ForeignKey(to=ColourVariation, on_delete=models.CASCADE)
+    size = models.ForeignKey(to=SizeVariation, null=True, blank=True, on_delete=models.CASCADE)
+    colour = models.ForeignKey(to=ColourVariation, null=True, blank=True, on_delete=models.CASCADE)
     order = models.ForeignKey(
         to="Order",
         related_name='items',
